@@ -2,6 +2,7 @@ import rospy
 from std_msgs.msg import Float32
 from dynamixel_sdk import *  # Uses Dynamixel SDK
 import time
+import numpy as np
 
 # Dynamixel settings
 ADDR_PRESENT_POSITION = 132
@@ -20,12 +21,16 @@ DEVICENAME = '/dev/ttyUSB0'  # Adjust according to your setup
 # Limits
 MIN_POSITION = 106
 MAX_POSITION = 190
-NEUTRAL_POSITION = 110
+NEUTRAL_POSITION = 120
 FULLY_CLOSED_POSITION = 190
-FORCE_THRESHOLD = 0.7  # Adjust as needed
-K = 0.05  # Control gain for current scaling
-AUTO_RETURN_SPEED = 0.01  # Increased Speed factor for returning to neutral
-MIN_RETURN_CURRENT = 1.0  # Minimum current applied during auto-return (mA)
+FORCE_THRESHOLD = 0.5  # Adjust as needed
+K = 0.5  # Control gain for current scaling
+AUTO_RETURN_SPEED = 0.1  # Increased Speed factor for returning to neutral
+MIN_RETURN_CURRENT = 150  # Minimum current applied during auto-return (mA)
+TAU = 64 # angle offset, depends on motor/gripper mounting [degree]
+K_MOTOR = 1.769 # motor constant [Nm/A]
+B_MOTOR = 0.2214 # negative of motor offset 
+L = 0.038 # length of lever arm [m]
 
 force_value = None  # Global variable to store the force value
 last_log_time = 0  # Timestamp for controlling logging rate
@@ -98,15 +103,15 @@ def read_current():
         rospy.logwarn('Failed to read current.')
         return None
     current_mA = current * 2.69  # Convert from raw to mA
-    log_info(f"Motor Current: {current_mA:.2f} mA")
+    log_info(f"Motor Current: {current_mA:.6f} mA")
     return current_mA
 
 
 def move_motor(current, position):
     current_value = int(current / 2.69)  # Conversion factor for current in mA to SDK unit
     packetHandler.write4ByteTxRx(portHandler, DXL_ID, ADDR_GOAL_POSITION, int(position / 0.088))
-    packetHandler.write4ByteTxRx(portHandler, DXL_ID, ADDR_GOAL_CURRENT, current_value)
-    log_info(f"Applying Current: {current:.2f} mA | Target Position: {position:.2f} degrees")
+    packetHandler.write2ByteTxRx(portHandler, DXL_ID, ADDR_GOAL_CURRENT, current_value)
+    log_info(f"Applying Current: {current:.6f} mA | Target Position: {position:.2f} degrees")
     read_current()  # Read current immediately after applying to confirm it's set
 
 
@@ -114,15 +119,20 @@ def move_to_neutral():
     current_position = read_position()
     if current_position is None:
         return
-
-    delta = (NEUTRAL_POSITION - current_position) * AUTO_RETURN_SPEED
-    current = max(K * abs(delta), MIN_RETURN_CURRENT)
-    move_motor(current, NEUTRAL_POSITION)
-
+    move_motor(MIN_RETURN_CURRENT, NEUTRAL_POSITION)
 
 def grip_object():
-    move_motor(K * force_value, FULLY_CLOSED_POSITION)
+    I = force_to_current_mapping(force_value)
+    move_motor(I, FULLY_CLOSED_POSITION)
 
+def force_to_current_mapping(force):
+
+    position = read_position()
+    if position is None:
+        return
+    gripper_angle = position - TAU
+    I = (((force * L / np.sin(np.deg2rad(gripper_angle))) + B_MOTOR) / K_MOTOR) * 1000
+    return I
 
 try:
     while not rospy.is_shutdown():
