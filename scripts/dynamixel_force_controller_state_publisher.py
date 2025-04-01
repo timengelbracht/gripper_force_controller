@@ -179,25 +179,24 @@ def force_to_current_mapping(force):
 
 try:
     while not rospy.is_shutdown():
-    if force_value is not None:
-        force_pub.publish(Float32(force_value))
         if force_value is not None:
+            force_pub.publish(Float32(force_value))
             log_info(f"Force Value: {force_value:.2f} N")
             log_params()
             current_position = read_position()
             current_current = read_current()
             publish_joint_and_diag()
+
             if current_position is None:
                 continue
-            if MIN_POSITION <= current_position <= MAX_POSITION:
-                if force_value > FORCE_THRESHOLD:
-                    grip_object()
-                else:
-                    move_to_neutral()
+
+            within_bounds = MIN_POSITION <= current_position <= MAX_POSITION
+            if within_bounds and force_value > FORCE_THRESHOLD:
+                grip_object()
             else:
                 move_to_neutral()
+
         rate.sleep()
 finally:
     packetHandler.write1ByteTxRx(portHandler, DXL_ID, ADDR_TORQUE_ENABLE, 0)
     portHandler.closePort()
-
