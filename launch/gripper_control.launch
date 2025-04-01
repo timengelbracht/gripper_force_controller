@@ -1,6 +1,6 @@
 <launch>
     <!-- Start the Dynamixel Gripper Controller Node -->
-    <node pkg="gripper_force_controller" type="dynamixel_force_controller.py" name="dynamixel_force_controller" output="screen"/>
+    <node pkg="gripper_force_controller" type="dynamixel_force_controller_state_publisher.py" name="dynamixel_force_controller" output="screen"/>
         <param name="DEVICENAME" value="/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_A10K4UM5-if00-port0"/>
         <param name="BAUDRATE_DXL" value="57600"/>
 
