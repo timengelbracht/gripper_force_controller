@@ -49,6 +49,7 @@ rate = rospy.Rate(50)
 rospy.Subscriber('/gripper_force_trigger', Float32, lambda msg: globals().__setitem__('force_value', msg.data))
 
 joint_pub = rospy.Publisher('/joint_states', JointState, queue_size=10)
+force_pub = rospy.Publisher('/gripper_force', Float32, queue_size=10)
 diag_pub = rospy.Publisher('/diagnostics', DiagnosticArray, queue_size=10)
 
 # Initialize PortHandler and PacketHandler for Dynamixel
@@ -97,10 +98,16 @@ def read_current():
     if raw is None:
         rospy.logwarn('Failed to read current.')
         return None
+
+    # Convert from unsigned to signed 16-bit value
+    if raw > 32767:
+        raw -= 65536
+
     mA = raw * 2.69
     log_info(f"Motor Current: {mA:.6f} mA")
     return mA
 
+# Publishes joint state and diagnostic info for the motor
 def publish_joint_and_diag():
     pos = read_value(ADDR_PRESENT_POSITION, 4)
     vel = read_value(ADDR_PRESENT_VELOCITY, 4)
@@ -172,6 +179,8 @@ def force_to_current_mapping(force):
 
 try:
     while not rospy.is_shutdown():
+    if force_value is not None:
+        force_pub.publish(Float32(force_value))
         if force_value is not None:
             log_info(f"Force Value: {force_value:.2f} N")
             log_params()
