@@ -1,8 +1,8 @@
 <launch>
     <!-- Start the Dynamixel Gripper Controller Node -->
     <node pkg="gripper_force_controller" type="dynamixel_force_controller_state_publisher.py" name="dynamixel_force_controller" output="screen"/>
-        <param name="DEVICENAME" value="/dev/serial/by-id/usb-FTDI_USB__-__Serial_Converter_FT89FCUV-if00-port0"/>
-        <param name="BAUDRATE_DXL" value="57600"/>
+        <param name="devicename" value="/dev/serial/by-id/usb-FTDI_USB__-__Serial_Converter_FT89FCUV-if00-port0"/>
+        <param name="baudrate_dxl" value="57600"/>
 
     <!-- Start the Serial Node for Arduino Communication -->
     <node name="serial_node" pkg="rosserial_python" type="serial_node.py" output="screen">

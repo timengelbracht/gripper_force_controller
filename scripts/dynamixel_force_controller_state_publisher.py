@@ -20,9 +20,6 @@ ADDR_PRESENT_VOLTAGE = 144
 ADDR_PRESENT_TEMP = 146
 
 PROTOCOL_VERSION = 2.0
-DXL_ID = 1
-BAUDRATE_DXL = 57600
-DEVICENAME = '/dev/ttyUSB0'  # Adjust according to your setup
 
 # Limits
 MIN_POSITION = 106
@@ -44,6 +41,10 @@ last_log_time = 0  # Timestamp for controlling logging rate
 # Initialize ROS node
 rospy.init_node('gripper_force_controller')
 rate = rospy.Rate(50)
+
+BAUDRATE_DXL = rospy.get_param('baudrate_dxl', 57600)
+DEVICENAME = rospy.get_param('devicename', '/dev/ttyUSB0')
+DXL_ID = rospy.get_param('dxl_id', 1)
 
 # Subscribe to the force topic
 rospy.Subscriber('/gripper_force_trigger', Float32, lambda msg: globals().__setitem__('force_value', msg.data))
