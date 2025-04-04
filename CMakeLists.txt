@@ -20,20 +20,21 @@ include_directories(
 # Install Python scripts
 catkin_install_python(PROGRAMS
   scripts/dynamixel_force_controller.py
+  scripts/dynamixel_force_controller_state_publisher.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
 # Build and link C++ node
-add_executable(gripper_force_controller_node
-  src/gripper_force_controller_node.cpp
+add_executable(dynamixel_force_controller_state_publisher
+  src/dynamixel_force_controller_state_publisher.cpp
 )
 
-target_link_libraries(gripper_force_controller_node
+target_link_libraries(dynamixel_force_controller_state_publisher
   ${catkin_LIBRARIES}
 )
 
 # Install C++ executable
-install(TARGETS gripper_force_controller_node
+install(TARGETS dynamixel_force_controller_state_publisher
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
