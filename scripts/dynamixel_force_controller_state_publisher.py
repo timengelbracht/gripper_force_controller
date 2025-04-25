@@ -97,9 +97,9 @@ def read_position():
 
 def read_current():
     raw = read_value(ADDR_PRESENT_CURRENT, 2)
-    if raw is None:
-        rospy.logwarn('Failed to read current.')
-        return None
+
+    if raw is None or raw >= 0xFFFE:
+        return 0.0 
 
     # Convert from unsigned to signed 16-bit value
     if raw > 32767:
