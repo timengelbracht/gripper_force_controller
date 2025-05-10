@@ -1,9 +1,17 @@
 <?xml version="1.0"?>
 <launch>
-    <!-- Start ZED camera -->
+    <!-- --- ZED (zedm) ------------------------------------------------ -->
     <include file="$(find zed_wrapper)/launch/zedm.launch">
-        <arg name="frame_rate" value="30"/>  <!-- Change to your desired FPS -->
+        <arg name="frame_rate" value="30"/>
     </include>
+
+    <group ns="zedm">
+        <!-- exact left/right sync -->
+        <param name="video/sync_mode" value="2" type="int"/>
+
+        <!-- re-stamp every IMU sample to the image clock -->
+        <param name="sensors/sensors_timestamp_sync" value="true" type="bool"/>
+    </group>
 
     <!-- Start Digit sensors -->
     <node pkg="gelsight_digit_ros" type="gelsight_digit_node.py" name="digit_left" output="screen" >
