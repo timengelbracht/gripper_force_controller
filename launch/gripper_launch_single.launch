@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <launch>
-    <!-- --- ZED (zedm) ------------------------------------------------ -->
     <include file="$(find zed_wrapper)/launch/zedm.launch">
         <arg name="frame_rate" value="30"/>
     </include>
@@ -29,5 +28,5 @@
     </node>
 
     <!-- Start gripper controller -->
-    <include file="$(find gripper_force_controller)/launch/gripper_control_cpp.launch" />
+    <include file="$(find gripper_force_controller)/launch/gripper_control_py.launch" />
 </launch>
