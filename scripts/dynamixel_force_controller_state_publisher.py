@@ -69,9 +69,9 @@ L        = 0.038       # lever arm [m]
 rospy.init_node("gripper_force_controller")
 rate = rospy.Rate(50)
 
-BAUDRATE_DXL = rospy.get_param("baudrate_dxl", 57600)
-DEVICENAME   = rospy.get_param("devicename", "/dev/ttyUSB0")
-DXL_ID       = rospy.get_param("dxl_id", 1)
+BAUDRATE_DXL = rospy.get_param("~baudrate_dxl", 57600)
+DEVICENAME   = rospy.get_param("~devicename", "/dev/ttyUSB0")
+DXL_ID       = rospy.get_param("~dxl_id", 1)
 
 force_value: Optional[float] = None  # cache of latest force trigger
 _last_log: float = 0.0               # throttled log timer
