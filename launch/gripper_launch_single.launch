@@ -9,6 +9,8 @@
 
         <!-- re-stamp every IMU sample to the image clock -->
         <param name="sensors/sensors_timestamp_sync" value="true" type="bool"/>
+
+        <param name="general/grab_frame_rate" value="30" type="int"/>
     </group>
 
     <!-- Start Digit sensors -->
