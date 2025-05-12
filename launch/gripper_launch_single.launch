@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <launch>
     <include file="$(find zed_wrapper)/launch/zedm.launch">
-        <arg name="frame_rate" value="30"/>
     </include>
 
     <group ns="zedm">
