@@ -30,4 +30,7 @@
 
     <!-- Start gripper controller -->
     <include file="$(find gripper_force_controller)/launch/gripper_control_py.launch" />
+
+    <!-- Start force torque sensor -->
+    <include file="$(find rokubimini_ethercat)/launch/rokubimini_ethercat.launch" />
 </launch>
