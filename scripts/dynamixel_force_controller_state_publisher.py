@@ -49,10 +49,10 @@ def _to_signed(val: Optional[int], bits: int = 16) -> int:
 # ──────────────────────────────────────────────────────────────────────────────
 # Application parameters
 # ──────────────────────────────────────────────────────────────────────────────
-MIN_POSITION          = 106
-MAX_POSITION          = 190
-NEUTRAL_POSITION      = 120
-FULLY_CLOSED_POSITION = 190
+# MIN_POSITION          = 106
+# MAX_POSITION          = 190
+# NEUTRAL_POSITION      = 120
+# FULLY_CLOSED_POSITION = 190
 
 FORCE_THRESHOLD    = 0.5    # N
 AUTO_RETURN_SPEED  = 0.1
@@ -72,6 +72,11 @@ rate = rospy.Rate(50)
 BAUDRATE_DXL = rospy.get_param("~baudrate_dxl", 57600)
 DEVICENAME   = rospy.get_param("~devicename", "/dev/ttyUSB0")
 DXL_ID       = rospy.get_param("~dxl_id", 1)
+
+MIN_POSITION = rospy.get_param("~min_ticks")
+MAX_POSITION = rospy.get_param("~max_ticks")
+NEUTRAL_POSITION = MIN_POSITION + 15   # if you like
+FULLY_CLOSED_POSITION = MAX_POSITION    
 
 force_value: Optional[float] = None  # cache of latest force trigger
 _last_log: float = 0.0               # throttled log timer
