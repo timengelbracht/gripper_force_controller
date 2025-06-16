@@ -15,6 +15,8 @@
   <!-- Dynamixel Gripper -->
   <arg name="dxl_device" default="/dev/serial/by-id/usb-FTDI_USB__-__Serial_Converter_FT89FCUV-if00-port0"/>
   <arg name="dxl_baud" default="57600"/>
+  <arg name="min_ticks" default="106"/>
+  <arg name="max_ticks" default="190"/>
 
   <!-- Arduino Serial -->
   <arg name="serial_port" default="/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_A10K4UM5-if00-port0"/>
@@ -53,6 +55,8 @@
   <node pkg="gripper_force_controller" type="dynamixel_force_controller_state_publisher.py" name="dynamixel_force_controller" output="screen">
     <param name="devicename" value="$(arg dxl_device)"/>
     <param name="baudrate_dxl" value="$(arg dxl_baud)"/>
+    <param name="min_ticks"    value="$(arg min_ticks)" />  
+    <param name="max_ticks"    value="$(arg max_ticks)" />  
   </node>
 
   <!-- ARDUINO SERIAL (LOAD CELL) -->
