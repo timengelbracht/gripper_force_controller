@@ -1,16 +1,18 @@
 <launch>
     <!-- Start the Dynamixel Gripper Controller Node -->
-    <node pkg="gripper_force_controller" type="dynamixel_force_controller_state_publisher.py" name="dynamixel_force_controller" output="screen"/>
-        <param name="devicename" value="/dev/serial/by-id/usb-FTDI_USB__-__Serial_Converter_FT89FCUV-if00-port0"/>
-        <param name="baudrate_dxl" value="57600"/>
+    <node pkg="gripper_force_controller" type="dynamixel_force_controller_state_publisher.py" name="dynamixel_force_controller" output="screen">
+        <param name="~devicename" value="/dev/serial/by-id/usb-FTDI_USB__-__Serial_Converter_FT89FCUV-if00-port0"/>
+        <param name="~baudrate_dxl" value="57600"/>
 
         <!-- mechanical stroke limits (ticks) -->
-        <param name="min_ticks"    value="106" />   
-        <param name="max_ticks"    value="190" />  
+        <param name="~min_ticks"    value="106" />
+        <param name="~max_ticks"    value="190" />
+        <param name="telemetry_rate"    value="30" />
+    </node>
 
     <!-- Start the Serial Node for Arduino Communication -->
     <node name="serial_node" pkg="rosserial_python" type="serial_node.py" output="screen">
-        <param name="port" value="/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_A10K4UM5-if00-port0"/>
+        <param name="port" value="/dev/serial/by-id/usb-Arduino_LLC_Arduino_Nano_Every_1E4CCDEC515346354E202020FF113D46-if00"/>
         <param name="baud" value="57600"/>
     </node>
 </launch>
