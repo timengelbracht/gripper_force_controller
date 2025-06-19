@@ -41,7 +41,7 @@ def send_dxl_command(addr_name: str, value: int):
     req.id        = 1
     req.addr_name = addr_name
     req.value     = value
-    print(value)
+  
     try:
         res = joint_cmd_srv(req)
         if not res.comm_result:
