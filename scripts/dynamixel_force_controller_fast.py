@@ -68,7 +68,7 @@ def force_cb(msg: Float32):
         f   = msg.data
         pos = latest_pos
 
-    rospy.loginfo(f"[FORCE_CB] raw force = {f:.3f} N, pos = {pos:.1f}°")
+    rospy.loginfo_throttle(5, f"[FORCE_CB] raw force = {f:.3f} N, pos = {pos:.1f}°")
 
     # force → torque → current (mA)
     angle   = pos - TAU
@@ -85,7 +85,7 @@ def force_cb(msg: Float32):
     pos_val = int(goal_tick)
 
     #rospy.loginfo(f"[CTRL] f={f:.2f}N pos={pos:.1f}° → cur={cur_val} tick={pos_val}")
-    rospy.loginfo_throttle(1.0, f"[CTRL] f={f:.2f}N pos={pos:.1f}° → cur={cur_val} tick={pos_val}")
+    rospy.loginfo_throttle(5.0, f"[CTRL] f={f:.2f}N pos={pos:.1f}° → cur={cur_val} tick={pos_val}")
 
 
     send_dxl_command("Goal_Current",  cur_val)
