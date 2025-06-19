@@ -1,0 +1,36 @@
+<launch>
+  <!-- 1) Arduino serial node -->
+  <arg name="arduino_port"
+       default="/dev/serial/by-id/usb-Arduino_LLC_Arduino_Nano_Every_20224ADB515346354E202020FF113B19-if0>
+  <arg name="arduino_baud" default="57600"/>
+
+  <node name="serial_node"
+        pkg="rosserial_python"
+        type="serial_node.py"
+        output="screen">
+    <param name="port" value="$(arg arduino_port)"/>
+    <param name="baud" value="$(arg arduino_baud)"/>
+  </node>
+
+  <!-- 2) Dynamixel Workbench Controller -->
+  <arg name="usb_port"
+       default="/dev/serial/by-id/usb-FTDI_USB__-__Serial_Converter_FT94ELAD-if00-port0"/>
+  <arg name="dxl_baud_rate" default="57600"/>
+
+  <include file="$(find dynamixel_workbench_controllers)/launch/dynamixel_controllers.launch">
+    <arg name="usb_port"      value="$(arg usb_port)"/>
+    <arg name="dxl_baud_rate" value="$(arg dxl_baud_rate)"/>
+  </include>
+
+  <!-- 3) Your force‐control node -->
+  <arg name="min_ticks" default="106"/>
+  <arg name="max_ticks" default="190"/>
+
+  <node pkg="gripper_force_controller"
+        type="test.py"
+        name="gripper_force_controller"
+        output="screen">
+    <param name="min_ticks" value="$(arg min_ticks)"/>
+    <param name="max_ticks" value="$(arg max_ticks)"/>
+  </node>
+</launch>
